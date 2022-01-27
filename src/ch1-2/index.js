@@ -1,0 +1,36 @@
+import { Pane } from "tweakpane";
+export const pane = new Pane();
+export const PARAMS = {
+  circleSize: 10,
+  sizePerSide: 16,
+  offset: 20,
+};
+
+pane.addInput(PARAMS, "circleSize", { min: 0, max: 100, step: 10 });
+pane.addInput(PARAMS, "sizePerSide", { min: 0, max: 20, step: 1 });
+
+function draw(ctx) {
+  const { circleSize, sizePerSide, offset } = PARAMS;
+  clearCanvas();
+  const totalCircle = sizePerSide * sizePerSide;
+
+  [...Array(totalCircle)].forEach((value, index) => {
+    const colPos = index % sizePerSide;
+    const rowPos = Math.floor(index / sizePerSide);
+    const x = offset + circleSize * 2 * colPos;
+    const y = offset + circleSize * 2 * rowPos;
+
+    ctx.beginPath();
+    ctx.arc(x, y, circleSize, 0, Math.PI * 2, true);
+    ctx.fill();
+  });
+  window.requestAnimationFrame(() => draw(ctx));
+}
+
+function clearCanvas() {
+  ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+}
+
+const app = document.querySelector("#app");
+const ctx = app.getContext("2d");
+window.requestAnimationFrame(() => draw(ctx));
